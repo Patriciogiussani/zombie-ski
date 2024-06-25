@@ -11,26 +11,26 @@ export default class Game extends Phaser.Scene {
     this.timeElapsed = 0;
     this.cerebroSpawned = false;
     this.jumpVelocity = -200;
-    this.playerSpeed = 50; 
+    this.playerSpeed = 50; // Reduced speed
   }
 
   preload() {
-    this.load.image("fondo", "/public/assets/background.jpg");
-    this.load.image("zombie", "/public/assets/zombie.png");
-    this.load.image("zombie2", "/public/assets/zombie2.png");
-    this.load.image("zombie3", "/public/assets/zombie3.png");
-    this.load.image("zombie4", "/public/assets/zombie4.png");
-    this.load.image("zombie5", "/public/assets/zombie5.png");
-    this.load.image("zombieGO", "/public/assets/zombieGO.png");
-    this.load.image("cerebro", "/public/assets/cerebro.png");
-    this.load.image("arbol", "/public/assets/arbol.png");
-    this.load.image("roca", "/public/assets/roca.png");
-    this.load.image("hueco", "/public/assets/hueco.png");
-    this.load.image("mano", "/public/assets/mano.png");
-    this.load.image("tronco", "/public/assets/tronco.png");
-    this.load.image("cartel", "/public/assets/cartel.png");
-    this.load.image("muñeco", "/public/assets/muñeco.png");
-    this.load.image("sombra", "/public/assets/sombra.png"); 
+    this.load.image("fondo", "./public/assets/background.jpg");
+    this.load.image("zombie", "./public/assets/zombie.png");
+    this.load.image("zombie2", "./public/assets/zombie2.png");
+    this.load.image("zombie3", "./public/assets/zombie3.png");
+    this.load.image("zombie4", "./public/assets/zombie4.png");
+    this.load.image("zombie5", "./public/assets/zombie5.png");
+    this.load.image("zombieGO", "./public/assets/zombieGO.png");
+    this.load.image("cerebro", "./public/assets/cerebro.png");
+    this.load.image("arbol", "./public/assets/arbol.png");
+    this.load.image("roca", "./public/assets/roca.png");
+    this.load.image("hueco", "./public/assets/hueco.png");
+    this.load.image("mano", "./public/assets/mano.png");
+    this.load.image("tronco", "./public/assets/tronco.png");
+    this.load.image("cartel", "./public/assets/cartel.png");
+    this.load.image("muñeco", "./public/assets/muñeco.png");
+    this.load.image("sombra", "./public/assets/sombra.png"); // Load the shadow image
   }
 
   create() {
@@ -43,7 +43,7 @@ export default class Game extends Phaser.Scene {
     this.player.body.setSize(this.player.width * 0.5, this.player.height * 0.8);
     this.player.body.setOffset(this.player.width * 0.25, this.player.height * 0.1);
 
-    this.shadow = this.add.image(this.player.x, this.player.y + 10, "sombra"); 
+    this.shadow = this.add.image(this.player.x, this.player.y + 10, "sombra"); // Create shadow
     this.shadow.setScale(0.0);
 
     this.cursor = this.input.keyboard.addKeys('W,A,S,D,SPACE');
@@ -86,7 +86,7 @@ export default class Game extends Phaser.Scene {
       loop: true,
     });
 
-    
+    // Crear las imágenes de las vidas
     this.livesImages = [];
     for (let i = 0; i < 5; i++) {
       const lifeImage = this.add.image(600 + i * 40, 32, 'mano').setScale(0.1).setTint(0xffffff);
@@ -123,16 +123,16 @@ export default class Game extends Phaser.Scene {
     }
 
     if (this.cursor.S.isDown) {
-      this.player.setVelocityY(this.playerSpeed + 100); 
+      this.player.setVelocityY(this.playerSpeed + 100); // Move down faster
     } else if (this.cursor.W.isDown) {
-      this.player.setVelocityY(this.playerSpeed - 100); 
+      this.player.setVelocityY(this.playerSpeed - 100); // Move up slower
     }
 
     if (this.cursor.SPACE.isDown && this.player.body.touching.down) {
       this.player.setVelocityY(this.jumpVelocity);
     }
 
-    
+    // Update shadow position
     this.shadow.x = this.player.x;
     this.shadow.y = this.player.y + 10;
 
@@ -233,7 +233,7 @@ export default class Game extends Phaser.Scene {
     obstacle.destroy();
     if (obstacle.texture.key === 'hueco') {
       this.lives = 0;
-      this.player.setVisible(false); 
+      this.player.setVisible(false); // Simulate falling into the hole
     } else {
       this.lives -= 1;
     }
