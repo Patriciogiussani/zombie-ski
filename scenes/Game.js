@@ -10,7 +10,8 @@ export default class Game extends Phaser.Scene {
     this.lives = 5;
     this.timeElapsed = 0;
     this.cerebroSpawned = false;
-    this.playerSpeed = 50; // Reduced speed
+    this.jumpVelocity = -200;
+    this.playerSpeed = 50; 
   }
 
   preload() {
@@ -29,6 +30,7 @@ export default class Game extends Phaser.Scene {
     this.load.image("tronco", "/public/assets/tronco.png");
     this.load.image("cartel", "/public/assets/cartel.png");
     this.load.image("muñeco", "/public/assets/muñeco.png");
+    this.load.image("sombra", "/public/assets/sombra.png"); 
   }
 
   create() {
@@ -41,7 +43,10 @@ export default class Game extends Phaser.Scene {
     this.player.body.setSize(this.player.width * 0.5, this.player.height * 0.8);
     this.player.body.setOffset(this.player.width * 0.25, this.player.height * 0.1);
 
-    this.cursor = this.input.keyboard.addKeys('W,A,S,D');
+    this.shadow = this.add.image(this.player.x, this.player.y + 10, "sombra"); 
+    this.shadow.setScale(0.0);
+
+    this.cursor = this.input.keyboard.addKeys('W,A,S,D,SPACE');
 
     this.recolectables = this.physics.add.group({ allowGravity: false });
     this.obstacles = this.physics.add.group({ allowGravity: false });
@@ -81,7 +86,7 @@ export default class Game extends Phaser.Scene {
       loop: true,
     });
 
-    // Crear las imágenes de las vidas
+    
     this.livesImages = [];
     for (let i = 0; i < 5; i++) {
       const lifeImage = this.add.image(600 + i * 40, 32, 'mano').setScale(0.1).setTint(0xffffff);
@@ -118,10 +123,18 @@ export default class Game extends Phaser.Scene {
     }
 
     if (this.cursor.S.isDown) {
-      this.player.setVelocityY(this.playerSpeed + 100); // Move down faster
+      this.player.setVelocityY(this.playerSpeed + 100); 
     } else if (this.cursor.W.isDown) {
-      this.player.setVelocityY(this.playerSpeed - 100); // Move up slower
+      this.player.setVelocityY(this.playerSpeed - 100); 
     }
+
+    if (this.cursor.SPACE.isDown && this.player.body.touching.down) {
+      this.player.setVelocityY(this.jumpVelocity);
+    }
+
+    
+    this.shadow.x = this.player.x;
+    this.shadow.y = this.player.y + 10;
 
     const markerHeight = 100;
 
@@ -155,7 +168,6 @@ export default class Game extends Phaser.Scene {
       }
     }
   }
-
 
   createObstacle() {
     const x = Phaser.Math.Between(50, 750);
@@ -221,7 +233,7 @@ export default class Game extends Phaser.Scene {
     obstacle.destroy();
     if (obstacle.texture.key === 'hueco') {
       this.lives = 0;
-      this.player.setVisible(false); // Simulate falling into the hole
+      this.player.setVisible(false); 
     } else {
       this.lives -= 1;
     }
