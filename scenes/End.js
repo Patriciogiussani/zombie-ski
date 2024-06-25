@@ -1,4 +1,3 @@
-
 export default class End extends Phaser.Scene {
   constructor() {
     super("end-scene");
@@ -19,16 +18,14 @@ export default class End extends Phaser.Scene {
       "Ponete a laburar mejor",
       "No podes ser tan horrible",
       "Toca reiniciar manco",
-      
     ];
 
     const fraseAleatoria = Phaser.Utils.Array.GetRandom(frasesBurlonas);
 
-    this.add.text(400, 200, 'GAME OVER', { fontSize: '64px', fill: '#ff0000' }).setOrigin(0.5);
-    this.add.text(400, 300, 'Score: ' + this.finalScore, { fontSize: '32px', fill: '#ffffff' }).setOrigin(0.5);
-    this.add.text(400, 400, fraseAleatoria, { fontSize: '24px', fill: '#ffffff' }).setOrigin(0.5);
+    this.add.text(400, 200, 'GAME OVER', { fontFamily: 'Consolas', fontWeight: 'bold', fontSize: '64px', fill: '#ff0000' }).setOrigin(0.5);
+    this.add.text(400, 300, 'Record: ' + this.finalScore, { fontFamily: 'Consolas', fontWeight: 'bold', fontSize: '32px', fill: '#ffffff' }).setOrigin(0.5);
+    this.add.text(400, 400, fraseAleatoria, { fontFamily: 'Consolas', fontWeight: 'bold', fontSize: '24px', fill: '#ffffff' }).setOrigin(0.5);
 
-   
     this.input.on('pointerdown', () => this.scene.start('hello-world'));
   }
 }
