@@ -15,21 +15,21 @@ export default class Game extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image("fondo", "/public/assets/background.jpg");
-    this.load.image("zombie", "/public/assets/zombie.png");
-    this.load.image("zombie2", "/public/assets/zombie2.png");
-    this.load.image("zombie3", "/public/assets/zombie3.png");
-    this.load.image("zombie4", "/public/assets/zombie4.png");
-    this.load.image("zombie5", "/public/assets/zombie5.png");
-    this.load.image("zombieGO", "/public/assets/zombieGO.png");
-    this.load.image("cerebro", "/public/assets/cerebro.png");
-    this.load.image("arbol", "/public/assets/arbol.png");
-    this.load.image("roca", "/public/assets/roca.png");
-    this.load.image("hueco", "/public/assets/hueco.png");
-    this.load.image("mano", "/public/assets/mano.png");
-    this.load.image("tronco", "/public/assets/tronco.png");
-    this.load.image("cartel", "/public/assets/cartel.png");
-    this.load.image("muñeco", "/public/assets/muñeco.png");
+    this.load.image("fondo", "/public/background.jpg");
+    this.load.image("zombie", "/public/zombie.png");
+    this.load.image("zombie2", "/public/zombie2.png");
+    this.load.image("zombie3", "/public/zombie3.png");
+    this.load.image("zombie4", "/public/zombie4.png");
+    this.load.image("zombie5", "/public/zombie5.png");
+    this.load.image("zombieGO", "/public/zombieGO.png");
+    this.load.image("cerebro", "/public/cerebro.png");
+    this.load.image("arbol", "/public/arbol.png");
+    this.load.image("roca", "/public/roca.png");
+    this.load.image("hueco", "/public/hueco.png");
+    this.load.image("mano", "/public/mano.png");
+    this.load.image("tronco", "/public/tronco.png");
+    this.load.image("cartel", "/public/cartel.png");
+    this.load.image("muñeco", "/public/muñeco.png");
     
   }
 
@@ -43,7 +43,7 @@ export default class Game extends Phaser.Scene {
     this.player.body.setSize(this.player.width * 0.5, this.player.height * 0.8);
     this.player.body.setOffset(this.player.width * 0.25, this.player.height * 0.1);
 
-    this.shadow = this.add.image(this.player.x, this.player.y + 10, "sombra"); // Create shadow
+    
     this.shadow.setScale(0.0);
 
     this.cursor = this.input.keyboard.addKeys('W,A,S,D,SPACE');
