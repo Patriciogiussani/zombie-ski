@@ -10,7 +10,8 @@ export default class Game extends Phaser.Scene {
     this.lives = 5;
     this.timeElapsed = 0;
     this.cerebroSpawned = false;
-    this.playerSpeed = 0; // Restablecer la velocidad a 0
+    this.playerSpeed = 50; 
+    this.avalancheDirection = 1; 
   }
 
   preload() {
@@ -29,16 +30,19 @@ export default class Game extends Phaser.Scene {
     this.load.image("tronco", "./public/assets/tronco.png");
     this.load.image("cartel", "./public/assets/cartel.png");
     this.load.image("avalancha", "./public/assets/avalanchaE.png");
+    this.load.image("tiempo", "./public/assets/tiempo.png");
   }
 
   create() {
-    this.cielo = this.add.tileSprite(400, 300, 800, 600, "fondo"); // TileSprite para mover el fondo
+    this.cielo = this.add.tileSprite(400, 300, 800, 600, "fondo");
 
-    // Añadir la avalancha como paralaje estático
+    
+   
     this.avalancha = this.add.image(400, -150, "avalancha");
     this.avalancha.setScale(1.5);
+    
 
-    this.player = this.physics.add.sprite(400, 300, "zombie1"); // Posicionar en el medio de la pantalla
+    this.player = this.physics.add.sprite(400, 300, "zombie1");
     this.player.setCollideWorldBounds(true);
     this.player.setScale(0.9);
     this.player.body.setSize(this.player.width * 0.5, this.player.height * 0.8);
@@ -49,21 +53,9 @@ export default class Game extends Phaser.Scene {
     this.recolectables = this.physics.add.group({ allowGravity: false });
     this.obstacles = this.physics.add.group({ allowGravity: false });
 
-    this.physics.add.overlap(
-      this.player,
-      this.recolectables,
-      this.collectRecolectable,
-      null,
-      this
-    );
-    this.physics.add.collider(
-      this.player,
-      this.obstacles,
-      this.hitObstacle,
-      null,
-      this
-    );
-
+    this.physics.add.overlap(this.player, this.recolectables, this.collectRecolectable, null, this);
+    this.physics.add.collider(this.player, this.obstacles, this.hitObstacle, null, this);
+    this.physics.add.collider(this.player, this.avalancha, this.hitAvalanche, null, this); 
     this.recolectableTimer = this.time.addEvent({
       delay: this.recolectableDelay,
       callback: this.createRecolectable,
@@ -90,7 +82,8 @@ export default class Game extends Phaser.Scene {
       this.livesImages.push(lifeImage);
     }
 
-    this.timeText = this.add.text(16, 16, 'Tiempo: 0', { fontFamily: 'Consolas', fontWeight: 'bold', fontSize: '32px', fill: '#000' });
+    this.timeImage = this.add.image(16, 16, 'tiempo').setOrigin(0, 0).setScale(0.5);
+    this.timeText = this.add.text(136, 25, this.formatTime(this.timeElapsed), { fontFamily: 'Consolas', fontSize: '32px', fill: '#000000' });
 
     this.time.addEvent({
       delay: 1000,
@@ -109,40 +102,42 @@ export default class Game extends Phaser.Scene {
   }
 
   update() {
-    // No cambiar la velocidad vertical del jugador
+    if (this.cursor.W.isDown) {
+      this.player.setVelocityY(-100 + this.playerSpeed);
+    } else if (this.cursor.S.isDown) {
+      this.player.setVelocityY(150 + this.playerSpeed);
+    } else {
+      this.player.setVelocityY(this.playerSpeed); 
+    }
+
     if (this.cursor.A.isDown) {
-      this.player.setVelocityX(-150);
+      this.player.setVelocityX(-100);
     } else if (this.cursor.D.isDown) {
-      this.player.setVelocityX(150);
+      this.player.setVelocityX(100);
     } else {
       this.player.setVelocityX(0);
     }
 
-    if (this.cursor.S.isDown) {
-      this.player.setVelocityY(100);
-    } else if (this.cursor.W.isDown) {
-      this.player.setVelocityY(-100);
-    } else {
-      this.player.setVelocityY(0);
-    }
-
-    this.cielo.tilePositionY += 1; // Mueve el fondo hacia abajo
+    this.cielo.tilePositionY += 1;
 
     const markerHeight = 100;
 
     this.obstacles.children.iterate(obstacle => {
       if (obstacle && obstacle.y < markerHeight) {
-        obstacle.y -= 10; // Movimiento hacia arriba
+        obstacle.y -= 10;
         obstacle.destroy();
       }
     });
 
     this.recolectables.children.iterate(recolectable => {
       if (recolectable && recolectable.y < markerHeight) {
-        recolectable.y -= 10; // Movimiento hacia arriba
+        recolectable.y -= 10;
         recolectable.destroy();
       }
     });
+
+ 
+    this.avalancha.y += Math.sin(this.time.now / 500) * 0.5;
   }
 
   createRecolectable() {
@@ -166,25 +161,25 @@ export default class Game extends Phaser.Scene {
   createObstacle() {
     const x = Phaser.Math.Between(50, 750);
     const y = 600;
-    const obstacleType = Phaser.Math.Between(1, 5); // Eliminar la opción del muñeco
+    const obstacleType = Phaser.Math.Between(1, 5);
     let obstacleKey, obstacleScale, obstacle;
 
     if (this.isPositionFree(x, y, this.recolectables) && this.isPositionFree(x, y, this.obstacles)) {
       if (obstacleType === 1) {
         obstacleKey = 'arbol';
-        obstacleScale = 0.5;
+        obstacleScale = 0.6;
       } else if (obstacleType === 2) {
         obstacleKey = 'roca';
-        obstacleScale = 0.7;
+        obstacleScale = 0.8;
       } else if (obstacleType === 3) {
         obstacleKey = 'hueco';
-        obstacleScale = 0.2;
+        obstacleScale = 0.3;
       } else if (obstacleType === 4) {
         obstacleKey = 'tronco';
-        obstacleScale = 0.5;
+        obstacleScale = 0.6;
       } else {
         obstacleKey = 'cartel';
-        obstacleScale = 0.3;
+        obstacleScale = 0.4;
       }
 
       obstacle = this.obstacles.create(x, y, obstacleKey);
@@ -193,8 +188,8 @@ export default class Game extends Phaser.Scene {
       obstacle.checkWorldBounds = true;
       obstacle.outOfBoundsKill = true;
 
-      obstacle.body.setSize(obstacle.width * 0.8, obstacle.height * 0.8);
-      obstacle.body.setOffset(obstacle.width * 0.1, obstacle.height * 0.1);
+      obstacle.body.setSize(obstacle.width * 0.7, obstacle.height * 0.7); 
+      obstacle.body.setOffset(obstacle.width * 0.15, obstacle.height * 0.15);
     }
   }
 
@@ -246,9 +241,30 @@ export default class Game extends Phaser.Scene {
     }
   }
 
+  hitAvalanche(player, avalanche) {
+    this.lives = 0;
+    this.player.setVisible(false);
+    this.updateLivesDisplay();
+    this.player.setTexture('zombieGO');
+    this.physics.pause();
+    this.time.addEvent({
+      delay: 1000,
+      callback: () => {
+        this.scene.start('end-scene', { score: this.timeElapsed });
+      },
+      callbackScope: this,
+    });
+  }
+
   updateTime() {
     this.timeElapsed += 1;
-    this.timeText.setText('Tiempo: ' + this.timeElapsed);
+    this.timeText.setText(this.formatTime(this.timeElapsed));
+  }
+
+  formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const secondsLeft = seconds % 60;
+    return `${minutes < 10 ? '0' + minutes : minutes}:${secondsLeft < 10 ? '0' + secondsLeft : secondsLeft}`;
   }
 
   updateLivesDisplay() {
