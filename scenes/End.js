@@ -49,7 +49,7 @@ export default class End extends Phaser.Scene {
 
     this.add.image(400, 150, 'perdiste').setOrigin(0.5).setScale(1); 
     this.add.image(350, 300, 'record').setOrigin(0.5).setScale(0.7); 
-    this.add.text(450, 300, this.finalScore, { fontFamily: 'Consolas', fontSize: '48px', fontWeight: 'bold', fill: '#000000' }).setOrigin(0.5);
+    this.add.text(475, 300, this.finalScore, { fontFamily: 'Consolas', fontSize: '48px', fontWeight: 'bold', fill: '#000000' }).setOrigin(0.5);
 
     this.add.text(400, 400, fraseAleatoria, { fontFamily: 'Consolas', fontSize: '24px', fontWeight: 'bold', fill: '#000000' }).setOrigin(0.5);
 
