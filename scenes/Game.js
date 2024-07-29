@@ -5,7 +5,7 @@ export default class Game extends Phaser.Scene {
 
   init() {
     this.score = 0;
-    this.spawnDelay = 3000;
+    this.spawnDelay = 2000;
     this.recolectableDelay = 15000;
     this.lives = 5;
     this.timeElapsed = 0;
@@ -278,8 +278,11 @@ export default class Game extends Phaser.Scene {
   }
 
   increaseSpawnRate() {
-    if (this.spawnDelay > 800) {
-      this.spawnDelay -= 400;
+   
+    if (this.spawnDelay > 300) {
+      this.spawnDelay -= 400;  
+    } else if (this.spawnDelay > 50) {
+      this.spawnDelay -= 50;   
     }
     if (this.recolectableDelay > 3500) {
       this.recolectableDelay -= 2000;
