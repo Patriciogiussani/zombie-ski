@@ -241,20 +241,7 @@ export default class Game extends Phaser.Scene {
     }
   }
 
-  hitAvalanche(player, avalanche) {
-    this.lives = 0;
-    this.player.setVisible(false);
-    this.updateLivesDisplay();
-    this.player.setTexture('zombieGO');
-    this.physics.pause();
-    this.time.addEvent({
-      delay: 1000,
-      callback: () => {
-        this.scene.start('end-scene', { score: this.timeElapsed });
-      },
-      callbackScope: this,
-    });
-  }
+ 
 
   updateTime() {
     this.timeElapsed += 1;
@@ -278,23 +265,31 @@ export default class Game extends Phaser.Scene {
   }
 
   increaseSpawnRate() {
-   
-    if (this.spawnDelay > 300) {
+    
+    if (this.spawnDelay > 800) {
       this.spawnDelay -= 400;  
-    } else if (this.spawnDelay > 50) {
-      this.spawnDelay -= 50;   
-    }
-    if (this.recolectableDelay > 3500) {
+    } 
+    if (this.recolectableDelay > 5000) {
       this.recolectableDelay -= 2000;
+    } else {
+      this.recolectableDelay = 3500; 
     }
-    this.recolectableTimer.remove();
-    this.obstacleTimer.remove();
+  
+   
+    if (this.recolectableTimer) {
+      this.recolectableTimer.remove(false);
+    }
+  
+    if (this.obstacleTimer) {
+      this.obstacleTimer.remove(false);
+    }
     this.recolectableTimer = this.time.addEvent({
       delay: this.recolectableDelay,
       callback: this.createRecolectable,
       callbackScope: this,
       loop: true,
     });
+  
     this.obstacleTimer = this.time.addEvent({
       delay: this.spawnDelay,
       callback: this.createObstacle,
@@ -302,4 +297,6 @@ export default class Game extends Phaser.Scene {
       loop: true,
     });
   }
+  
+  
 }
