@@ -103,7 +103,7 @@ export default class Game extends Phaser.Scene {
 
   update() {
     if (this.cursor.W.isDown) {
-      this.player.setVelocityY(-100 + this.playerSpeed);
+      this.player.setVelocityY(-120 + this.playerSpeed);
     } else if (this.cursor.S.isDown) {
       this.player.setVelocityY(150 + this.playerSpeed);
     } else {
@@ -111,9 +111,9 @@ export default class Game extends Phaser.Scene {
     }
 
     if (this.cursor.A.isDown) {
-      this.player.setVelocityX(-100);
+      this.player.setVelocityX(-180);
     } else if (this.cursor.D.isDown) {
-      this.player.setVelocityX(100);
+      this.player.setVelocityX(180);
     } else {
       this.player.setVelocityX(0);
     }
@@ -147,7 +147,7 @@ export default class Game extends Phaser.Scene {
 
       if (this.isPositionFree(x, y, this.recolectables) && this.isPositionFree(x, y, this.obstacles)) {
         const recolectable = this.recolectables.create(x, y, "cerebro");
-        recolectable.setVelocityY(-150);
+        recolectable.setVelocityY(-200);
         recolectable.setScale(0.2);
         recolectable.checkWorldBounds = true;
         recolectable.outOfBoundsKill = true;
@@ -183,7 +183,7 @@ export default class Game extends Phaser.Scene {
       }
 
       obstacle = this.obstacles.create(x, y, obstacleKey);
-      obstacle.setVelocityY(-150);
+      obstacle.setVelocityY(-200);
       obstacle.setScale(obstacleScale);
       obstacle.checkWorldBounds = true;
       obstacle.outOfBoundsKill = true;
